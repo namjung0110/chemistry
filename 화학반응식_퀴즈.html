@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>화학반응식 퀴즈 — 고1 통합과학</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: #f4f6f9;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 2rem 1rem;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 480px;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .header h1 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 4px;
+  }
+
+  .header p {
+    font-size: 13px;
+    color: #888;
+  }
+
+  .card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+  }
+
+  .top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+
+  .question-label {
+    font-size: 12px;
+    color: #aaa;
+    letter-spacing: 0.05em;
+  }
+
+  .score-pill {
+    font-size: 12px;
+    background: #eef9f4;
+    color: #1D9E75;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+
+  .progress-bar {
+    height: 4px;
+    background: #eee;
+    border-radius: 2px;
+    margin-bottom: 1.25rem;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #1D9E75, #5DCAA5);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+
+  .question-text {
+    font-size: 14px;
+    color: #444;
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+  }
+
+  .reaction-eq {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a1a2e;
+    background: #f4f6f9;
+    border-radius: 12px;
+    padding: 0.875rem 1rem;
+    margin-bottom: 1.25rem;
+    text-align: center;
+    letter-spacing: 0.02em;
+  }
+
+  .options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 1.25rem;
+  }
+
+  .opt-btn {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-size: 15px;
+    font-family: 'Noto Sans KR', sans-serif;
+    background: #fff;
+    border: 1.5px solid #e8e8e8;
+    border-radius: 12px;
+    cursor: pointer;
+    color: #1a1a2e;
+    transition: all 0.15s;
+    font-weight: 400;
+  }
+
+  .opt-btn:hover:not(:disabled) {
+    border-color: #1D9E75;
+    background: #f4fdf9;
+  }
+
+  .opt-btn:active:not(:disabled) { transform: scale(0.98); }
+
+  .opt-btn.correct {
+    background: #eef9f4;
+    border-color: #1D9E75;
+    color: #085041;
+    font-weight: 500;
+  }
+
+  .opt-btn.wrong {
+    background: #fff0f0;
+    border-color: #e05c5c;
+    color: #7a1f1f;
+  }
+
+  .opt-btn:disabled { cursor: default; }
+
+  .feedback {
+    font-size: 13.5px;
+    padding: 0.875rem 1rem;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+    display: none;
+  }
+
+  .feedback.show { display: block; }
+  .feedback.correct { background: #eef9f4; color: #085041; border-left: 3px solid #1D9E75; }
+  .feedback.wrong { background: #fff0f0; color: #7a1f1f; border-left: 3px solid #e05c5c; }
+
+  .next-btn {
+    width: 100%;
+    padding: 0.875rem;
+    font-size: 15px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 500;
+    background: #1a1a2e;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    display: none;
+    transition: background 0.15s;
+  }
+
+  .next-btn:hover { background: #2d2d4e; }
+  .next-btn.show { display: block; }
+
+  .score-card {
+    text-align: center;
+    padding: 2rem 1rem;
+  }
+
+  .score-emoji { font-size: 48px; margin-bottom: 0.5rem; }
+  .score-big { font-size: 52px; font-weight: 700; color: #1D9E75; line-height: 1; }
+  .score-sub { font-size: 14px; color: #888; margin: 0.5rem 0 1.5rem; }
+
+  .restart-btn {
+    padding: 0.875rem 2.5rem;
+    font-size: 15px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 500;
+    background: #1a1a2e;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .restart-btn:hover { background: #2d2d4e; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>⚗️ 화학반응식 퀴즈</h1>
+    <p>고1 통합과학 · 8문제</p>
+  </div>
+  <div class="card">
+    <div id="quiz-area"></div>
+  </div>
+</div>
+
+<script>
+const questions = [
+  {
+    q: "철(Fe)이 산소와 반응하면 산화철(III)이 생성됩니다. 다음 반응식의 빈칸에 알맞은 계수는?",
+    eq: "__ Fe + __ O₂ → __ Fe₂O₃",
+    options: ["4, 3, 2", "2, 3, 1", "3, 2, 1", "2, 1, 2"],
+    answer: 0,
+    explanation: "4Fe + 3O₂ → 2Fe₂O₃\n철 4개와 산소 분자 3개가 반응해 산화철(III) 2개를 만들어요.\nFe: 4=4 ✓, O: 6=6 ✓"
+  },
+  {
+    q: "탄소(C)가 산소와 완전 연소할 때 생기는 물질은?",
+    eq: "C + O₂ → ?",
+    options: ["CO (일산화탄소)", "CO₂ (이산화탄소)", "C₂O (이산화이탄소)", "CO₃ (삼산화탄소)"],
+    answer: 1,
+    explanation: "C + O₂ → CO₂\n탄소가 충분한 산소와 완전 연소하면 이산화탄소가 생성됩니다.\n연료의 완전 연소 반응의 대표적인 예예요."
+  },
+  {
+    q: "수소(H₂)와 산소(O₂)가 반응하여 물(H₂O)이 생성되는 반응식을 완성하세요.",
+    eq: "__ H₂ + __ O₂ → __ H₂O",
+    options: ["1, 1, 1", "2, 1, 2", "1, 2, 2", "2, 2, 1"],
+    answer: 1,
+    explanation: "2H₂ + O₂ → 2H₂O\nH: 4=4 ✓, O: 2=2 ✓\n수소 연료전지의 핵심 반응이기도 해요."
+  },
+  {
+    q: "염산(HCl)과 수산화나트륨(NaOH)의 중화 반응 생성물은?",
+    eq: "HCl + NaOH → ?",
+    options: ["NaCl + H₂O", "NaHCl + O", "Na + HClO", "NaCl₂ + H"],
+    answer: 0,
+    explanation: "HCl + NaOH → NaCl + H₂O\n산과 염기가 반응해 염(소금)과 물이 생성되는 중화 반응이에요.\nNa, Cl, O, H 모두 보존됩니다."
+  },
+  {
+    q: "탄산칼슘(CaCO₃)을 가열하면 분해됩니다. 생성물로 옳은 것은?",
+    eq: "CaCO₃ → ?",
+    options: ["Ca + CO₃", "CaO + CO₂", "CaCO + O₂", "Ca₂O + CO"],
+    answer: 1,
+    explanation: "CaCO₃ → CaO + CO₂\n석회석을 가열하면 산화칼슘(생석회)과 이산화탄소로 분해돼요.\n시멘트 제조의 핵심 반응입니다."
+  },
+  {
+    q: "메탄(CH₄)의 완전 연소 반응식의 계수로 옳은 것은?",
+    eq: "CH₄ + __ O₂ → CO₂ + __ H₂O",
+    options: ["1, 1", "2, 2", "3, 1", "1, 3"],
+    answer: 1,
+    explanation: "CH₄ + 2O₂ → CO₂ + 2H₂O\nO: 4=2+2=4 ✓, H: 4=4 ✓\n천연가스의 주성분인 메탄의 연소 반응이에요."
+  },
+  {
+    q: "마그네슘(Mg)이 산소와 반응해 산화마그네슘(MgO)이 됩니다. 계수는?",
+    eq: "__ Mg + __ O₂ → __ MgO",
+    options: ["1, 1, 2", "2, 1, 2", "1, 2, 1", "2, 2, 4"],
+    answer: 1,
+    explanation: "2Mg + O₂ → 2MgO\nMg: 2=2 ✓, O: 2=2 ✓\n마그네슘이 밝은 흰빛을 내며 타는 반응으로, 섬광 불꽃에 사용돼요."
+  },
+  {
+    q: "아연(Zn)과 묽은 황산(H₂SO₄)이 반응할 때 발생하는 기체는?",
+    eq: "Zn + H₂SO₄ → ZnSO₄ + ?",
+    options: ["O₂ (산소)", "CO₂ (이산화탄소)", "H₂ (수소)", "SO₂ (이산화황)"],
+    answer: 2,
+    explanation: "Zn + H₂SO₄ → ZnSO₄ + H₂↑\n아연이 산과 반응하면 수소 기체가 발생해요.\n금속과 산의 반응에서 수소가 발생하는 대표적인 예입니다."
+  }
+];
+
+let current = 0, score = 0, answered = false;
+
+function render() {
+  const area = document.getElementById('quiz-area');
+  if (current >= questions.length) {
+    const pct = Math.round(score / questions.length * 100);
+    let emoji = pct >= 80 ? '🎉' : pct >= 60 ? '👍' : '💪';
+    let msg = pct >= 80 ? '훌륭해요!' : pct >= 60 ? '잘했어요!' : '다시 도전해봐요!';
+    area.innerHTML = `
+      <div class="score-card">
+        <div class="score-emoji">${emoji}</div>
+        <div class="score-big">${score}/${questions.length}</div>
+        <div class="score-sub">정답률 ${pct}% · ${msg}</div>
+        <button class="restart-btn" onclick="restart()">다시 풀기</button>
+      </div>`;
+    return;
+  }
+  const q = questions[current];
+  const prog = (current / questions.length * 100).toFixed(0);
+  area.innerHTML = `
+    <div class="top-row">
+      <div class="question-label">문제 ${current+1} / ${questions.length}</div>
+      <div class="score-pill">점수 ${score}점</div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" style="width:${prog}%"></div></div>
+    <div class="question-text">${q.q}</div>
+    <div class="reaction-eq">${q.eq}</div>
+    <div class="options-grid">
+      ${q.options.map((opt, i) => `<button class="opt-btn" id="opt${i}" onclick="choose(${i})">${opt}</button>`).join('')}
+    </div>
+    <div class="feedback" id="feedback"></div>
+    <button class="next-btn" id="next-btn" onclick="next()">${current < questions.length-1 ? '다음 문제 →' : '결과 보기 →'}</button>
+  `;
+  answered = false;
+}
+
+function choose(idx) {
+  if (answered) return;
+  answered = true;
+  const q = questions[current];
+  const fb = document.getElementById('feedback');
+  const nextBtn = document.getElementById('next-btn');
+  q.options.forEach((_, i) => {
+    const btn = document.getElementById('opt'+i);
+    btn.disabled = true;
+    if (i === q.answer) btn.classList.add('correct');
+    else if (i === idx) btn.classList.add('wrong');
+  });
+  if (idx === q.answer) {
+    score++;
+    fb.className = 'feedback correct show';
+    fb.innerHTML = '✅ 정답이에요!<br><span style="font-size:13px;margin-top:4px;display:block;">' + q.explanation.replace(/\n/g,'<br>') + '</span>';
+  } else {
+    fb.className = 'feedback wrong show';
+    fb.innerHTML = '❌ 아쉬워요! 정답은 <strong>' + q.options[q.answer] + '</strong>이에요.<br><span style="font-size:13px;margin-top:4px;display:block;">' + q.explanation.replace(/\n/g,'<br>') + '</span>';
+  }
+  nextBtn.classList.add('show');
+}
+
+function next() { current++; render(); }
+function restart() { current = 0; score = 0; answered = false; render(); }
+
+render();
+</script>
+</body>
+</html>
